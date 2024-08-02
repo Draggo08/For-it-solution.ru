@@ -16,5 +16,5 @@ def scroll_text(t):
 # Создание видео
 video = CompositeVideoClip([text_clip.set_pos(scroll_text)]).set_duration(duration)
 
-# Сохраняем видео
+# Сохраняем видео в
 video.write_videofile("scrolling_text.mp4", fps=24)

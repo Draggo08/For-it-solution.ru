@@ -22,8 +22,10 @@ class IndexView(View):
             duration = 3
             text = text_instance.text
 
+            font_path = os.path.join(os.path.dirname(__file__), 'static/fonts/DejaVuSans-Bold.ttf')
+
             fontsize = 24
-            text_clip = TextClip(text, fontsize=fontsize, color='white', bg_color='black')
+            text_clip = TextClip(text, fontsize=fontsize, color='white', bg_color='black', font=font_path)
             text_width = text_clip.size[0]
 
             scroll_speed = (width + text_width) / duration

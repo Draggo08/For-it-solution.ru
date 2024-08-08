@@ -1,5 +1,5 @@
 import os
-from django.http import JsonResponse, FileResponse
+from django.http import FileResponse
 from django.views import View
 from django.shortcuts import render
 from .forms import TextForm
@@ -18,17 +18,22 @@ class IndexView(View):
         if form.is_valid():
             text_instance = form.save()
 
-            # Параметры видео
             width, height = 100, 100
-            duration = 3  # Продолжительность в секундах
+            duration = 3
             text = text_instance.text
 
-            text_clip = TextClip(text, fontsize=24, color='white', size=(width * 2, height)).set_duration(duration)
+            fontsize = 24
+            text_clip = TextClip(text, fontsize=fontsize, color='white', bg_color='black')
+            text_width = text_clip.size[0]
+
+            scroll_speed = (width + text_width) / duration
 
             def scroll_text(t):
-                return (-width + width * 2 * t / duration, 'center')
+                return (width - t * scroll_speed, 'center')
 
-            video = CompositeVideoClip([text_clip.set_position(scroll_text)]).set_duration(duration)
+            text_clip = text_clip.set_position(scroll_text).set_duration(duration)
+            video = CompositeVideoClip([text_clip], size=(width, height)).set_duration(duration)
+
             output_path = os.path.join(os.getcwd(), 'scrolling_text.mp4')
             video.write_videofile(output_path, fps=24)
 
